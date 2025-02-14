@@ -1,6 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:twitter_login/twitter_login.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -31,12 +42,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  Future<void> xLogin() async {
+    final xAuth = TwitterLogin(
+      apiKey: dotenv.env['TWITTER_API_KEY'] ?? '',
+      apiSecretKey: dotenv.env['TWITTER_SECRET_KEY'] ?? '',
+      redirectURI: 'twitterauth://',
+    );
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+    final authResult = await xAuth.login();
+    if (authResult.authToken == null || authResult.authTokenSecret == null) {
+      return;
+    }
+
+    final twitterAuthCredential = TwitterAuthProvider.credential(
+      accessToken: authResult.authToken!,
+      secret: authResult.authTokenSecret!,
+    );
+
+    await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
   }
 
   @override
@@ -53,20 +76,17 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'xにログインする',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            ElevatedButton(
+              onPressed: () {
+                xLogin();
+              },
+              child: const Text('X Login'),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

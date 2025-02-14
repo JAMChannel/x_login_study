@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "889689532002",
+    "project_id": "x-login-study",
+    "storage_bucket": "x-login-study.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889689532002:android:9c1f8c7fa44946639d933b",
+        "android_client_info": {
+          "package_name": "com.example.x_login_study"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1Akr9CiseUjaKLxsZ1hCTeo16NEnUlXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
